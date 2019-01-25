@@ -1,0 +1,77 @@
+{
+  "variables": {
+    "output_name": "nkn-testnet-{{timestamp}}",
+    "do_api_token": "",
+    "gc_project_id": "",
+    "gc_zone": "",
+    "gc_account_file": ""
+  },
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_token": "{{user `do_api_token`}}",
+      "image": "debian-9-x64",
+      "region": "sfo2",
+      "snapshot_name": "{{user `output_name`}}",
+      "size": "s-1vcpu-1gb",
+      "ssh_username": "root"
+    },
+    {
+      "type": "googlecompute",
+      "account_file": "{{user `gc_account_file`}}",
+      "project_id": "{{user `gc_project_id`}}",
+      "zone": "{{user `gc_zone`}}",
+      "image_name": "{{user `output_name`}}",
+      "source_image_family": "debian-9",
+      "ssh_username": "packer"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo sed -i '/stretch-backports/s/# //g' /etc/apt/sources.list",
+        "sudo apt-get update",
+        "sudo apt-get install golang-1.11-go git supervisor psmisc zip unzip lsof jq golang-glide make ntp -y",
+        "sudo mkdir -p /home/miner/go/src/github.com/nknorg/",
+        "sudo groupadd miner",
+        "sudo useradd -g miner -b /home -s /usr/sbin/nologin miner"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./golang_env.sh",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "./.bash_profile",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "./nkn.conf",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/golang_env.sh /etc/profile.d/",
+        "sudo mv /tmp/.bash_profile /home/miner/",
+        "sudo mv /tmp/nkn.conf /etc/supervisor/conf.d/"
+      ]
+    },
+    {
+      "type": "shell",
+      "script": "./build_nkn.sh"
+    },
+    {
+      "type": "shell",
+      "environment_vars": ["CHAIN=Chain_493128.zip"],
+      "inline": [
+        "cd /tmp && wget https://storage.googleapis.com/nkn-testnet-snapshot/$CHAIN",
+        "cd /home/miner/go/src/github.com/nknorg/nkn/testbed/node_0001/ && sudo -u miner unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+export HOME=/home/miner
+
+export GOROOT=/usr/lib/go-1.11
+export GOPATH=$HOME/go
+export PATH=$GOROOT/bin:$PATH
+export PATH=$GOPATH/bin:$PATH
+
+export NKN_HOME=$HOME/go/src/github.com/nknorg/nkn
