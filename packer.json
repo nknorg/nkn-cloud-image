@@ -10,7 +10,7 @@
     {
       "type": "digitalocean",
       "api_token": "{{user `do_api_token`}}",
-      "image": "debian-9-x64",
+      "image": "ubuntu-18-04-x64",
       "region": "sfo2",
       "snapshot_name": "{{user `output_name`}}",
       "size": "s-1vcpu-1gb",
@@ -22,7 +22,7 @@
       "project_id": "{{user `gc_project_id`}}",
       "zone": "{{user `gc_zone`}}",
       "image_name": "{{user `output_name`}}",
-      "source_image_family": "debian-9",
+      "source_image_family": "ubuntu-1804-lts",
       "ssh_username": "packer"
     }
   ],
@@ -30,9 +30,10 @@
     {
       "type": "shell",
       "inline": [
-        "sudo sed -i '/stretch-backports/s/# //g' /etc/apt/sources.list",
+        "sudo add-apt-repository ppa:longsleep/golang-backports",
         "sudo apt-get update",
-        "sudo apt-get install golang-1.11-go git supervisor psmisc zip unzip lsof jq golang-glide make ntp -y",
+        "sudo apt-get -y upgrade",
+        "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make ntp",
         "sudo mkdir -p /home/miner/go/src/github.com/nknorg/",
         "sudo groupadd miner",
         "sudo useradd -g miner -b /home -s /usr/sbin/nologin miner"
