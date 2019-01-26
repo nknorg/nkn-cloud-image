@@ -55,11 +55,17 @@
       "destination": "/tmp/"
     },
     {
+      "type": "file",
+      "source": "./launch_node.sh",
+      "destination": "/tmp/"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo mv /tmp/golang_env.sh /etc/profile.d/",
         "sudo mv /tmp/.bash_profile /home/nkn/",
-        "sudo mv /tmp/nkn.conf /etc/supervisor/conf.d/"
+        "sudo mv /tmp/nkn.conf /etc/supervisor/conf.d/",
+        "sudo mv /tmp/launch_node.sh /home/nkn/"
       ]
     },
     {
@@ -71,7 +77,7 @@
       "environment_vars": ["CHAIN=Chain_493128.zip"],
       "inline": [
         "cd /tmp && wget https://storage.googleapis.com/nkn-testnet-snapshot/$CHAIN",
-        "cd /home/nkn/go/src/github.com/nknorg/nkn/testbed/node_0001/ && sudo -u nkn unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
+        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
       ]
     }
   ]
