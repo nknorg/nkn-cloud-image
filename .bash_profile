@@ -1,4 +1,4 @@
-export HOME=/home/miner
+export HOME=/home/nkn
 
 export GOROOT=/usr/lib/go-1.11
 export GOPATH=$HOME/go

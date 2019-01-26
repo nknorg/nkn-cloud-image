@@ -34,9 +34,9 @@
         "sudo apt-get update",
         "sudo apt-get -y upgrade",
         "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make ntp",
-        "sudo mkdir -p /home/miner/go/src/github.com/nknorg/",
-        "sudo groupadd miner",
-        "sudo useradd -g miner -b /home -s /usr/sbin/nologin miner"
+        "sudo mkdir -p /home/nkn/go/src/github.com/nknorg/",
+        "sudo groupadd nkn",
+        "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn"
       ]
     },
     {
@@ -58,7 +58,7 @@
       "type": "shell",
       "inline": [
         "sudo mv /tmp/golang_env.sh /etc/profile.d/",
-        "sudo mv /tmp/.bash_profile /home/miner/",
+        "sudo mv /tmp/.bash_profile /home/nkn/",
         "sudo mv /tmp/nkn.conf /etc/supervisor/conf.d/"
       ]
     },
@@ -71,7 +71,7 @@
       "environment_vars": ["CHAIN=Chain_493128.zip"],
       "inline": [
         "cd /tmp && wget https://storage.googleapis.com/nkn-testnet-snapshot/$CHAIN",
-        "cd /home/miner/go/src/github.com/nknorg/nkn/testbed/node_0001/ && sudo -u miner unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
+        "cd /home/nkn/go/src/github.com/nknorg/nkn/testbed/node_0001/ && sudo -u nkn unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
       ]
     }
   ]
