@@ -13,7 +13,7 @@ ${RANDOM_PASSWD}
 ${RANDOM_PASSWD}
 EOF
     echo ${RANDOM_PASSWD} > ./wallet.pswd
-    chmod 0400 wallet.pswd
+    chmod 0400 wallet.dat wallet.pswd
     return $?
 }
 

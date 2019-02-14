@@ -1,10 +1,12 @@
 {
   "variables": {
+    "chain_snapshot_url": "https://storage.googleapis.com/nkn-testnet-snapshot/Chain_567511.zip",
     "output_name": "nkn-testnet-{{timestamp}}",
     "do_api_token": "",
     "gc_project_id": "",
     "gc_zone": "",
-    "gc_account_file": ""
+    "gc_account_file": "",
+    "gc_license": ""
   },
   "builders": [
     {
@@ -23,7 +25,8 @@
       "zone": "{{user `gc_zone`}}",
       "image_name": "{{user `output_name`}}",
       "source_image_family": "ubuntu-1804-lts",
-      "ssh_username": "packer"
+      "ssh_username": "packer",
+      "image_licenses": ["{{user `gc_license`}}"]
     }
   ],
   "provisioners": [
@@ -74,10 +77,10 @@
     },
     {
       "type": "shell",
-      "environment_vars": ["CHAIN=Chain_493128.zip"],
+      "environment_vars": ["CHAIN="],
       "inline": [
-        "cd /tmp && wget https://storage.googleapis.com/nkn-testnet-snapshot/$CHAIN",
-        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/$CHAIN && rm /tmp/$CHAIN"
+        "wget {{user `chain_snapshot_url`}} -O /tmp/Chain.zip",
+        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/Chain.zip && rm /tmp/Chain.zip"
       ]
     }
   ]
