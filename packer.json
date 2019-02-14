@@ -44,22 +44,22 @@
     },
     {
       "type": "file",
-      "source": "./golang_env.sh",
+      "source": "./scripts/golang_env.sh",
       "destination": "/tmp/"
     },
     {
       "type": "file",
-      "source": "./.bash_profile",
+      "source": "./scripts/.bash_profile",
       "destination": "/tmp/"
     },
     {
       "type": "file",
-      "source": "./nkn.conf",
+      "source": "./scripts/nkn.conf",
       "destination": "/tmp/"
     },
     {
       "type": "file",
-      "source": "./launch_node.sh",
+      "source": "./scripts/launch_node.sh",
       "destination": "/tmp/"
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "type": "shell",
-      "script": "./build_nkn.sh"
+      "script": "./scripts/build_nkn.sh"
     },
     {
       "type": "shell",
