@@ -186,6 +186,7 @@ downNKNChainData() {
 addNKNCrontab() {
     cd /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/
     sudo wget -N https://raw.githubusercontent.com/nkn-dev/nkn-cloud-image/master/linux/nkn-monitor.sh
+    sudo chmod +x nkn-monitor.sh
     sudo chown $NKN_MINE_USER_NAME:$NKN_MINE_USER_NAME nkn-monitor.sh
     sudo -u $NKN_MINE_USER_NAME echo "# nkn mine crontab" > conf
     sudo -u $NKN_MINE_USER_NAME echo "* * * * * /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/nkn-monitor.sh &" >> conf
@@ -199,7 +200,6 @@ getBeneficiaryAddr $1
 initSomething
 
 delNKNMineUser
-
 
 initArch
 initOS
