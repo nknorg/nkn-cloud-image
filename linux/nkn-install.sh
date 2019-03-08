@@ -67,7 +67,8 @@ initTools() {
         sudo apt-get update
         sudo apt-get install -y jq make unzip psmisc git curl wget
     else
-        sudo yum install -y jq make unzip psmisc git curl wget
+        sudo yum install -y epel-release
+        sudo yum install -y jq make unzip psmisc git curl wget vim-common perl-Digest-SHA
     fi
 }
 
@@ -142,8 +143,10 @@ initNKNConf() {
 }
 EOF
 
+    sudo cp /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.testnet.json /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json
+
     sudo jq -n \
-            --argfile c1 /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.testnet.json \
+            --argfile c1 /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json \
             --argfile c2 /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.user.json '$c1 + $c2' > /tmp/config.json.merged
 
     sudo mv /tmp/config.json.merged /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json
@@ -191,6 +194,11 @@ addNKNCrontab() {
     cd $CURRENT_DIR
 }
 
+cleanSomething() {
+    sudo rm -f /home/$NKN_MINE_USER_NAME/$GLIDE_DIST
+    sudo rm -f /home/$NKN_MINE_USER_NAME/$GO_DIST
+}
+
 getBeneficiaryAddr $1
 
 initSomething
@@ -217,3 +225,5 @@ then
 fi
 
 addNKNCrontab
+
+cleanSomething
