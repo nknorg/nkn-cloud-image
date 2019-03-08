@@ -1,1 +1,1 @@
-## Scripts to automatically build NKN full node On Linus
+## Scripts to automatically build NKN full node On Linux

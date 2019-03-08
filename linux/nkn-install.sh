@@ -65,9 +65,9 @@ initTools() {
     if [[ ! -f /etc/redhat-release ]]
     then
         sudo apt-get update
-        sudo apt-get install -y unzip psmisc git curl wget
+        sudo apt-get install -y jq make unzip psmisc git curl wget
     else
-        sudo yum install -y unzip psmisc git curl wget
+        sudo yum install -y jq make unzip psmisc git curl wget
     fi
 }
 
@@ -133,26 +133,22 @@ buildNKN() {
 }
 
 initNKNConf() {
-    sudo cat <<EOF > /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json
+
+    sudo cat <<EOF > /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.user.json
 {
-  "HttpWsPort": 30002,
-  "HttpJsonPort": 30003,
-  "SeedList": [
-    "http://testnet-seed-0001.nkn.org:30003",
-    "http://testnet-seed-0002.nkn.org:30003",
-    "http://testnet-seed-0003.nkn.org:30003",
-    "http://testnet-seed-0004.nkn.org:30003",
-    "http://testnet-seed-0005.nkn.org:30003",
-    "http://testnet-seed-0006.nkn.org:30003",
-    "http://testnet-seed-0007.nkn.org:30003",
-    "http://testnet-seed-0008.nkn.org:30003"
-  ],
-  "GenesisBlockProposer": "022d52b07dff29ae6ee22295da2dc315fef1e2337de7ab6e51539d379aa35b9503",
-  "BeneficiaryAddr": "${BENEFICIARY_ADDR}",
+  "BeneficiaryAddr": "$BENEFICIARY_ADDR",
   "SyncBatchWindowSize": 128,
   "LogLevel": 2
 }
 EOF
+
+    sudo jq -n \
+            --argfile c1 /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.testnet.json \
+            --argfile c2 /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.user.json '$c1 + $c2' > /tmp/config.json.merged
+
+    sudo mv /tmp/config.json.merged /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json
+
+    sudo chown $NKN_MINE_USER_NAME:$NKN_MINE_USER_NAME /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.user.json
     sudo chown $NKN_MINE_USER_NAME:$NKN_MINE_USER_NAME /home/$NKN_MINE_USER_NAME/go/src/github.com/nknorg/nkn/config.json
 
 }
@@ -212,9 +208,10 @@ downloadNKNSource
 buildNKN
 
 initNKNConf
+
 initNKNWallet
 
-if [ "$2" -eq "1" ]
+if [ "$2" == "1" ]
 then
     downNKNChainData
 fi
