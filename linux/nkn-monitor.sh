@@ -1,7 +1,7 @@
 #! /bin/bash
 
-ulimit -n 4096
-ulimit -c unlimited
+# ulimit -n 4096
+# ulimit -c unlimited
 
 source $HOME/.bash_profile
 
