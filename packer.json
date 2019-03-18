@@ -1,6 +1,6 @@
 {
   "variables": {
-    "chain_snapshot_url": "https://storage.googleapis.com/nkn-testnet-snapshot/Chain_567511.zip",
+    "chain_snapshot_url": "https://testnet.nkn.org/Chain_latest.zip",
     "output_name": "nkn-testnet-{{timestamp}}",
     "do_api_token": "",
     "gc_project_id": "",
