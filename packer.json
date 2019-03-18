@@ -6,7 +6,10 @@
     "gc_project_id": "",
     "gc_zone": "",
     "gc_account_file": "",
-    "gc_license": ""
+    "gc_license": "",
+    "aws_access_key": "",
+    "aws_secret_access_key": "",
+    "aws_region": ""
   },
   "builders": [
     {
@@ -27,6 +30,24 @@
       "source_image_family": "ubuntu-1804-lts",
       "ssh_username": "packer",
       "image_licenses": ["{{user `gc_license`}}"]
+    },
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_access_key`}}",
+      "region": "{{user `aws_region`}}",
+      "ami_name": "{{user `output_name`}}",
+      "instance_type": "t2.small",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "ssh_username": "ubuntu"
     }
   ],
   "provisioners": [
@@ -82,6 +103,13 @@
       "inline": [
         "wget {{user `chain_snapshot_url`}} -O /tmp/Chain.zip",
         "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/Chain.zip && rm /tmp/Chain.zip"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo rm /home/*/.ssh/authorized_keys",
+        "sudo rm /root/.ssh/authorized_keys"
       ]
     }
   ]
