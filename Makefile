@@ -41,3 +41,9 @@ aws-marketplace:
 	-var 'aws_secret_access_key=$(shell cat aws/marketplace_secret_access_key)' \
 	-var 'aws_region=us-east-1' \
 	$(TEMPLATE)
+
+.PHONY: docker
+docker:
+	$(BUILD) -only=docker \
+	-var 'docker_repository=gcr.io/nkn-public/nkn-testnet' \
+	$(TEMPLATE)
