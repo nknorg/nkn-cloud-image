@@ -9,7 +9,8 @@
     "gc_license": "",
     "aws_access_key": "",
     "aws_secret_access_key": "",
-    "aws_region": ""
+    "aws_region": "",
+    "docker_repository": ""
   },
   "builders": [
     {
@@ -48,6 +49,15 @@
         "most_recent": true
       },
       "ssh_username": "ubuntu"
+    },
+    {
+      "type": "docker",
+      "image": "ubuntu:18.04",
+      "commit": true,
+      "changes": [
+        "WORKDIR /home/nkn/go/src/github.com/nknorg/nkn",
+        "ENTRYPOINT /home/nkn/launch_node.sh"
+      ]
     }
   ],
   "provisioners": [
@@ -55,10 +65,12 @@
       "type": "shell",
       "inline": [
         "sleep 30",
+        "apt-get update && apt-get -y install sudo || true",
+        "sudo apt-get -y install software-properties-common",
         "sudo add-apt-repository ppa:longsleep/golang-backports",
         "sudo apt-get update",
         "sudo apt-get -y upgrade",
-        "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make ntp",
+        "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make wget xxd",
         "sudo mkdir -p /home/nkn/go/src/github.com/nknorg/",
         "sudo groupadd nkn",
         "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn"
@@ -103,14 +115,31 @@
       "inline": [
         "wget {{user `chain_snapshot_url`}} -O /tmp/Chain.zip",
         "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/Chain.zip && rm /tmp/Chain.zip"
-      ]
+      ],
+      "except": ["docker"]
     },
     {
       "type": "shell",
       "inline": [
-        "sudo rm /home/*/.ssh/authorized_keys",
-        "sudo rm /root/.ssh/authorized_keys"
+        "sudo rm -f /home/*/.ssh/authorized_keys",
+        "sudo rm -f /root/.ssh/authorized_keys"
       ]
     }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "{{user `docker_repository`}}",
+        "tag": "{{timestamp}}"
+      },
+      "docker-push",
+      {
+        "type": "docker-tag",
+        "repository": "{{user `docker_repository`}}",
+        "tag": "latest"
+      },
+      "docker-push"
+    ]
   ]
 }
