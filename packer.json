@@ -131,15 +131,23 @@
       {
         "type": "docker-tag",
         "repository": "{{user `docker_repository`}}",
-        "tag": "{{timestamp}}"
+        "tag": "{{timestamp}}",
+        "only": ["docker"]
       },
-      "docker-push",
+      {
+        "type": "docker-push",
+        "only": ["docker"]
+      },
       {
         "type": "docker-tag",
         "repository": "{{user `docker_repository`}}",
-        "tag": "latest"
+        "tag": "latest",
+        "only": ["docker"]
       },
-      "docker-push"
+      {
+        "type": "docker-push",
+        "only": ["docker"]
+      }
     ]
   ]
 }
