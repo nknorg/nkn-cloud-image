@@ -35,6 +35,6 @@ git checkout ${LATEST_TAG}
 make
 
 mkdir -p ./Log
-[ -e "wallet.dat" ] || initWallet || ! echo "Init wallet fails" || exit 1
+[ -s "wallet.dat" ] || initWallet || ! echo "Init wallet fails" || exit 1
 ! [ -s "config.user.json" ] || mergeConfig || ! echo "Merge config fail" || exit 1
 start 1>./Log/nohup.out.$(date +%F_%T) 2>&1
