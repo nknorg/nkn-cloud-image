@@ -67,7 +67,7 @@
         "sleep 30",
         "apt-get update && apt-get -y install sudo || true",
         "sudo apt-get -y install software-properties-common",
-        "sudo add-apt-repository ppa:longsleep/golang-backports",
+        "sudo add-apt-repository -y ppa:longsleep/golang-backports",
         "sudo apt-get update",
         "sudo apt-get -y upgrade",
         "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make wget xxd",
