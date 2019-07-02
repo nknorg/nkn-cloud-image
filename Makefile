@@ -45,5 +45,5 @@ aws-marketplace:
 .PHONY: docker
 docker:
 	$(BUILD) -only=docker \
-	-var 'docker_repository=gcr.io/nkn-public/nkn-testnet' \
+	-var 'docker_repository=gcr.io/nkn-public/nkn-mainnet' \
 	$(TEMPLATE)

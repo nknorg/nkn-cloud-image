@@ -1,7 +1,7 @@
 {
   "variables": {
-    "chain_snapshot_url": "https://testnet.nkn.org/Chain_latest.zip",
-    "output_name": "nkn-testnet-{{timestamp}}",
+    "chain_snapshot_url": "https://nkn.org/ChainDB_latest.zip",
+    "output_name": "nkn-mainnet-{{timestamp}}",
     "do_api_token": "",
     "gc_project_id": "",
     "gc_zone": "",
@@ -70,7 +70,7 @@
         "sudo add-apt-repository -y ppa:longsleep/golang-backports",
         "sudo apt-get update",
         "sudo apt-get -y upgrade",
-        "sudo apt-get install -y golang-1.11 git supervisor psmisc zip unzip lsof jq golang-glide make wget xxd",
+        "sudo apt-get install -y golang-1.12 git supervisor psmisc zip unzip lsof jq make wget xxd",
         "sudo mkdir -p /home/nkn/go/src/github.com/nknorg/",
         "sudo groupadd nkn",
         "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn"
@@ -113,8 +113,8 @@
       "type": "shell",
       "environment_vars": ["CHAIN="],
       "inline": [
-        "wget {{user `chain_snapshot_url`}} -O /tmp/Chain.zip",
-        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/Chain.zip && rm /tmp/Chain.zip"
+        "wget {{user `chain_snapshot_url`}} -O /tmp/ChainDB.zip",
+        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/ChainDB.zip && rm /tmp/ChainDB.zip"
       ],
       "except": ["docker"]
     },

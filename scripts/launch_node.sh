@@ -7,13 +7,9 @@ source $HOME/.bash_profile
 export GOTRACEBACK=crash
 
 function initWallet () {
-  RANDOM_PASSWD=$(head -c 1024 /dev/urandom | shasum -a 512 -b | xxd -r -p | base64 | head -c 32)
-  ./nknc wallet -c <<EOF
-${RANDOM_PASSWD}
-${RANDOM_PASSWD}
-EOF
-  echo ${RANDOM_PASSWD} > ./wallet.pswd
-  chmod 0400 wallet.dat wallet.pswd
+  head -c 1024 /dev/urandom | shasum -a 512 -b | xxd -r -p | base64 | head -c 32 > wallet.pswd && echo >> wallet.pswd
+  cat wallet.pswd wallet.pswd | ./nknc wallet -c
+  chmod 0400 wallet.json wallet.pswd
   return $?
 }
 
@@ -22,11 +18,7 @@ function mergeConfig() {
 }
 
 function start () {
-  WALLET_PASSWD=$(cat ./wallet.pswd)
-  ./nknd --no-nat <<EOF
-${WALLET_PASSWD}
-${WALLET_PASSWD}
-EOF
+  cat wallet.pswd | ./nknd --no-nat
 }
 
 git fetch
@@ -35,6 +27,6 @@ git checkout ${LATEST_TAG}
 make
 
 mkdir -p ./Log
-[ -s "wallet.dat" ] || initWallet || ! echo "Init wallet fails" || exit 1
+[ -s "wallet.json" ] || initWallet || ! echo "Init wallet fails" || exit 1
 ! [ -s "config.user.json" ] || mergeConfig || ! echo "Merge config fail" || exit 1
 start 1>./Log/nohup.out.$(date +%F_%T) 2>&1
