@@ -12,6 +12,6 @@ sudo -u nkn git fetch || exit $?
 LATEST_TAG=$(git tag --sort=-creatordate | head -1) || exit $?
 sudo -u nkn git checkout ${LATEST_TAG} || exit $?
 sudo -u nkn bash -c "source /home/nkn/.bash_profile && make" || exit $?
-sudo -u nkn bash -c "cp config.testnet.json config.json" || exit $?
+sudo -u nkn bash -c "cp config.mainnet.json config.json" || exit $?
 
 [ $? -eq 0 ] || exit $?
