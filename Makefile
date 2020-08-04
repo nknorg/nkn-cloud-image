@@ -26,6 +26,16 @@ gc-public:
 	-var 'gc_zone=us-west1-a' \
 	$(TEMPLATE)
 
+.PHONY: gc-package
+gc-package:
+	rm -rf googlecloud/package
+	docker run --rm --workdir /mounted \
+	--mount type=bind,source="$(shell pwd)",target=/mounted \
+	--user $(shell id -u):$(shell id -g) gcr.io/cloud-marketplace-tools/dm/autogen \
+	--input_type YAML --single_input googlecloud/solution.yaml \
+	--output_type PACKAGE --output googlecloud/package
+	cd googlecloud/package && zip --exclude "*.DS_Store*" --exclude "*__MACOSX*" -r package.zip *
+
 .PHONY: aws
 aws:
 	$(BUILD) -only=amazon-ebs \
