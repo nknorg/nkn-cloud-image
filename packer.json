@@ -1,7 +1,7 @@
 {
   "variables": {
-    "chain_snapshot_url": "https://nkn.org/ChainDB_pruned_latest.zip",
-    "output_name": "nkn-mainnet-{{timestamp}}",
+    "chain_snapshot_url": "https://nkn.org/ChainDB_pruned_latest.tar.gz",
+    "output_name": "nkn-commercial-{{timestamp}}",
     "do_api_token": "",
     "gc_project_id": "",
     "gc_zone": "",
@@ -87,8 +87,8 @@
       "image": "ubuntu:18.04",
       "commit": true,
       "changes": [
-        "WORKDIR /home/nkn/go/src/github.com/nknorg/nkn",
-        "ENTRYPOINT /home/nkn/launch_node.sh"
+        "WORKDIR /home/nkn/nkn-commercial",
+        "ENTRYPOINT /home/nkn/nkn-commercial/nkn-commercial"
       ]
     }
   ],
@@ -96,57 +96,26 @@
     {
       "type": "shell",
       "inline": [
-        "sleep 30",
-        "apt-get update && apt-get -y install sudo || true",
-        "sudo apt-get -y install software-properties-common",
+        "sleep 60",
+        "echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections",
+        "sudo apt-get install -y -q apt-utils software-properties-common",
         "sudo add-apt-repository -y ppa:longsleep/golang-backports",
-        "sudo apt-get update",
-        "sudo apt-get -y upgrade",
-        "sudo apt-get install -y golang-1.12 git supervisor psmisc zip unzip lsof jq make wget xxd",
-        "sudo mkdir -p /home/nkn/go/src/github.com/nknorg/",
+        "sudo apt-get update -y -q",
+        "sudo apt-get upgrade -y -q",
+        "sudo apt-get install -y -q golang-1.12 git supervisor psmisc zip unzip lsof jq make wget xxd",
+        "sudo mkdir -p /home/nkn/nkn-commercial/",
         "sudo groupadd nkn",
-        "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn"
+        "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn",
+        "sudo chown -R nkn:nkn /home/nkn/",
+        "cd /home/nkn/nkn-commercial/ && sudo -u nkn curl -L -s -o linux-amd64.zip https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip && sudo -u nkn unzip linux-amd64.zip && sudo -u nkn mv linux-amd64/* . && sudo rm -rf linux-amd64.zip linux-amd64",
+        "cd /home/nkn/nkn-commercial/ && sudo ./nkn-commercial -d /home/nkn/nkn-commercial/ -u nkn install && sudo systemctl stop nkn-commercial"
       ]
-    },
-    {
-      "type": "file",
-      "source": "./scripts/golang_env.sh",
-      "destination": "/tmp/"
-    },
-    {
-      "type": "file",
-      "source": "./scripts/.bash_profile",
-      "destination": "/tmp/"
-    },
-    {
-      "type": "file",
-      "source": "./scripts/nkn.conf",
-      "destination": "/tmp/"
-    },
-    {
-      "type": "file",
-      "source": "./scripts/launch_node.sh",
-      "destination": "/tmp/"
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "sudo mv /tmp/golang_env.sh /etc/profile.d/",
-        "sudo mv /tmp/.bash_profile /home/nkn/",
-        "sudo mv /tmp/nkn.conf /etc/supervisor/conf.d/",
-        "sudo mv /tmp/launch_node.sh /home/nkn/"
-      ]
-    },
-    {
-      "type": "shell",
-      "script": "./scripts/build_nkn.sh"
     },
     {
       "type": "shell",
       "environment_vars": ["CHAIN="],
       "inline": [
-        "wget {{user `chain_snapshot_url`}} -O /tmp/ChainDB.zip",
-        "cd /home/nkn/go/src/github.com/nknorg/nkn/ && sudo -u nkn unzip /tmp/ChainDB.zip && rm /tmp/ChainDB.zip"
+        "sudo -u nkn mkdir -p /home/nkn/nkn-commercial/services/nkn-node/ && cd /home/nkn/nkn-commercial/services/nkn-node/ && sudo -u nkn curl -L -s {{user `chain_snapshot_url`}} | sudo -u nkn tar -zxf -"
       ],
       "except": ["docker"]
     },
