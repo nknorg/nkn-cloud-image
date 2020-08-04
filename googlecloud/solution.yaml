@@ -1,0 +1,90 @@
+partnerId: nkn-public
+solutionId: nkn-full-node
+partnerInfo:
+  name: NKN.org
+  description: NKN is a P2P network connectivity protocol & ecosystem powered by a novel public blockchain. Using our open source software, internet users can share network connections and unused bandwidth to build an open, efficient, and robust network.  This network infrastructure enables application developers to build the decentralized Internet so everyone can enjoy secure, low cost, and universally accessible connectivity.
+  url: https://www.google.com
+  shortDescription: NKN is the new kind of P2P network connectivity protocol & ecosystem powered by a novel public blockchain.  Our open source software allows Internet users to share network connections and NKN’s network infrastructure enables app developers to build decentralized applications.
+solutionInfo:
+  name: NKN Commercial
+  version: 2.0
+  description: The NKN Full Node is a fully installed and configured NKN relay node running in a single VM for Google Cloud.  By running a NKN node, you connect to NKN’s public network to relay data and earn rewards.  Be part of the NKN community by helping to build the decentralized Internet so everyone can enjoy secure, low cost, and universally accessible connectivity.<br><br>The NKN Full Node includes the following features:<br><ul><li>Pre-configured operating environment including NKN node and wallet</li><li>Auto-update - the node will always be running the latest software release</li><li>Auto-restart - the NKN node will automatically restart if the process stops</li><li>Track your nodes progress including node management and rewards at <a href="https://nknx.org">nknX</a></li></ul>
+  url: https://www.nkn.org
+  tagline: A blockchain powered P2P relay node for the NKN network
+  supportInfo: Once the node has been started you can check the status using any of these methods:<br><br><ul><li>Use webtool <a href="https://nknx.org">nknX</a> - You just need the public IP address of your droplet in order to check its status.</li><li>Command line tool nknc from a remote computer. You can download <a href="https://github.com/nknorg/nkn/releases">the latest nknc release</a> and use the command <b>nknc --ip <your droplet public ip address> info -s</b> to view the status of your node.</li><li>Command line tool nknc from within the VM.  The tool nknc is already installed and located in the directory <b>/home/nkn/go/src/github.com/nknorg/nkn</b>.  You can use the command <b>nknc info -s</b> to view the status of your node.  For additional commands, type <b>nknc --help</b></li></ul><br>When the NKN Full Node is started for the first time, a NKN wallet and its password will be generated automatically under the directory <b>/home/nkn/go/src/github.com/nknorg/nkn</b> named <b>wallet.json</b> and <b>wallet.pswd</b> respectively. Please take care to protect and back up both of these files since they are needed to access and control your account.<br><br>For more information on NKN Full Node, please visit <a href="https://github.com/nknorg/nkn">our Github</a><br><br>Please join <a href="https://discord.gg/c7mTynX">NKN's Discord group</a> for more technical support and discussions.
+  supportUrl: https://discord.gg/c7mTynX
+  documentations:
+    - url: https://github.com/nknorg/nkn
+      title: NKN Full Node GitHub
+      destinations:
+        - DESTINATION_POST_DEPLOY
+        - DESTINATION_CONFIGURATION
+    - url: https://medium.com/nknetwork/deploy-nkn-full-node-from-google-cloud-marketplace-10b795d57e63
+      title: Deploy NKN Full Node from Google Cloud
+      destinations:
+        - DESTINATION_POST_DEPLOY
+        - DESTINATION_CONFIGURATION
+  packagedSoftwareGroups:
+    - type: SOFTWARE_GROUP_OS
+      components:
+        - name: Ubuntu
+          version: 18.04 LTS
+    - components:
+        - name: NKN Commercial
+          version: 1.0.0
+spec:
+  version: 1.0
+  singleVm:
+    images:
+      # if more than one image is provided, the user will be able to select which one they want
+      - project: nkn-public
+        name: nkn-commercial-1596536241
+        label: NKN Commercial
+    machineType:
+      # Check http://cloud.google.com/compute/docs/machine-types for all available types
+      defaultMachineType:
+        gceMachineType: g1-small
+    bootDisk:
+      # Describes the default and minimum disk size (GB) that user should have to run your solution properly
+      diskSize:
+        defaultSizeGb: 25
+        minSizeGb: 25
+      diskType:
+        # For more information about disk types: http://cloud.google.com/compute/docs/reference/latest/diskTypes
+        # Some types: pd-standard, local-ssd, pd-ssd
+        defaultType: pd-standard
+    ipForwarding:
+      defaultOff: true
+    firewallRules:
+      - protocol: TCP
+        port: 30001-65535
+        defaultOff: false
+      - protocol: UDP
+        port: 30001-65535
+        defaultOff: false
+      - protocol: TCP
+        port: 80
+        defaultOff: false
+      - protocol: TCP
+        port: 443
+        defaultOff: false
+    gceStartupScript:
+      bashScriptContent: |
+        beneficiaryAddr=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/attributes/beneficiary-addr" -H "Metadata-Flavor: Google")
+        [ ! -s /home/nkn/nkn-commercial/config.json ] && echo "{\"beneficiaryAddr\": \"$beneficiaryAddr\"}" > /home/nkn/nkn-commercial/config.json && chown nkn:nkn /home/nkn/nkn-commercial/config.json && systemctl restart nkn-commercial
+    gceMetadataItems:
+      - key: beneficiary-addr
+        valueFromDeployInputField: beneficiaryAddr
+    # Here we can specify extra input fields to be passed to the deployment manager
+    deployInput:
+      sections:
+        # The place int he Deployment Manager config that this section will appear. More details in deployment_package_autogen_spec.proto
+        - placement: MAIN
+          # List of input fields that this section has
+          fields:
+            - required: true
+              name: beneficiaryAddr
+              title: Beneficiary Address
+              description: The NKN wallet address that will receive all the rewards
+              stringBox:
+                test_default_value: NKN
