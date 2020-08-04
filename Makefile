@@ -42,8 +42,21 @@ aws-marketplace:
 	-var 'aws_region=us-east-1' \
 	$(TEMPLATE)
 
+.PHONY: azure
+azure:
+	$(BUILD) -only=azure-arm \
+	-var 'azure_client_secret=$(shell cat azure/client_secret)' \
+	-var 'azure_client_id=ef478b29-3eea-43fb-a976-d440eb4616d4' \
+	-var 'azure_subscription_id=c2c2a793-38b2-43a6-ad76-b0f36b868494' \
+	-var 'azure_tenant_id=fca45903-25c1-4b28-8e6c-3164d0d79b30' \
+	-var 'azure_resource_group_name=yilunpacker' \
+	-var 'azure_storage_account=yilunpacker' \
+	$(TEMPLATE)
+
 .PHONY: docker
 docker:
 	$(BUILD) -only=docker \
 	-var 'docker_repository=gcr.io/nkn-public/nkn-mainnet' \
 	$(TEMPLATE)
+
+all-public: do gc-public aws-marketplace
