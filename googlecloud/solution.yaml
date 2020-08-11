@@ -52,6 +52,7 @@ solutionInfo:
     </ul><br><br>
     Please join <a href="https://discord.gg/c7mTynX">NKN's Discord group</a> for more technical support and discussions.
   supportUrl: https://discord.gg/c7mTynX
+  eulaUrl: https://commercial.nkn.org/eula
   documentations:
     - url: https://forum.nkn.org/t/nkn-commercial-an-all-in-one-mining-software-for-nkn-ecosystem/2281
       title: NKN Commercial Introduction
