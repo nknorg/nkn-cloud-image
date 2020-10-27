@@ -102,7 +102,7 @@
         "sudo add-apt-repository -y ppa:longsleep/golang-backports",
         "sudo apt-get update -y -q",
         "sudo apt-get upgrade -y -q",
-        "sudo apt-get install -y -q golang-1.12 git supervisor psmisc zip unzip lsof jq make wget xxd",
+        "sudo apt-get install -y -q golang-1.15 git supervisor psmisc zip unzip lsof jq make wget xxd",
         "sudo mkdir -p /home/nkn/nkn-commercial/",
         "sudo groupadd nkn",
         "sudo useradd -g nkn -b /home -s /usr/sbin/nologin nkn",
