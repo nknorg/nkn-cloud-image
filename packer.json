@@ -1,6 +1,6 @@
 {
   "variables": {
-    "chain_snapshot_url": "https://nkn.org/ChainDB_pruned_latest.tar.gz",
+    "chain_snapshot_url": "https://nkn.org/ChainDB_light_latest.tar.gz",
     "output_name": "nkn-commercial-{{timestamp}}",
     "do_api_token": "",
     "gc_project_id": "",
@@ -34,7 +34,7 @@
       "project_id": "{{user `gc_project_id`}}",
       "zone": "{{user `gc_zone`}}",
       "image_name": "{{user `output_name`}}",
-      "source_image_family": "ubuntu-1804-lts",
+      "source_image_family": "ubuntu-2204-lts",
       "disk_size": 25,
       "ssh_username": "packer",
       "image_licenses": ["{{user `gc_license`}}"]

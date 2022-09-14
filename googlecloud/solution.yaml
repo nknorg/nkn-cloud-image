@@ -68,7 +68,7 @@ solutionInfo:
     - type: SOFTWARE_GROUP_OS
       components:
         - name: Ubuntu
-          version: 18.04 LTS
+          version: 22.04 LTS
     - components:
         - name: NKN Commercial
           version: 1.0.0
@@ -78,12 +78,12 @@ spec:
     images:
       # if more than one image is provided, the user will be able to select which one they want
       - project: nkn-public
-        name: nkn-commercial-1596536241
+        name: nkn-commercial-1663073599
         label: NKN Commercial
     machineType:
       # Check http://cloud.google.com/compute/docs/machine-types for all available types
       defaultMachineType:
-        gceMachineType: g1-small
+        gceMachineType: e2-small
     bootDisk:
       # Describes the default and minimum disk size (GB) that user should have to run your solution properly
       diskSize:
