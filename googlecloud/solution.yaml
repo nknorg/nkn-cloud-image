@@ -78,7 +78,7 @@ spec:
     images:
       # if more than one image is provided, the user will be able to select which one they want
       - project: nkn-public
-        name: nkn-commercial-1668672221
+        name: nkn-commercial-1677220113
         label: NKN Commercial
     machineType:
       # Check http://cloud.google.com/compute/docs/machine-types for all available types
